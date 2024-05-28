@@ -88,12 +88,12 @@ where
 
 pub struct LabelledTimestampRecorder<L = &'static str> {
     device: Device,
-    query_set_capacity: u32,
+    query_set_capacity: usize,
     query_sets: Vec<TimestampQuerySet>,
     timings_resolve: Buffer<[u64], buffer::Usages<X, O, O, O, O, O, O, X, O, O>>,
     timings_readback: Buffer<[u64], buffer::Usages<O, O, O, O, O, O, X, O, O, X>>,
-    mapping: HashMap<L, u32>,
-    index_use: Vec<u32>,
+    mapping: HashMap<L, usize>,
+    index_use: Vec<usize>,
 }
 
 impl<L> LabelledTimestampRecorder<L>
@@ -156,10 +156,10 @@ where
                 index_use.push(0x1);
 
                 i * 32
-            }) as u32
+            })
         });
 
-        let (query_set, entry) = if index < self.timestamp_capacity() as u32 {
+        let (query_set, entry) = if index < self.timestamp_capacity() {
             let query_set = index / self.query_set_capacity;
             let entry = index.rem(self.query_set_capacity);
 
